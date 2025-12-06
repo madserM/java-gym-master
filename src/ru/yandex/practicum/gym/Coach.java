@@ -44,9 +44,9 @@ public class Coach {
 
     @Override
     public String toString() {
-        return "Тренер " +  surname + '\'' +
-                 name + '\'' +
-                 middleName + '\'' ;
+        return "Тренер " + surname + '\'' +
+                name + '\'' +
+                middleName + '\'';
     }
 }
 
