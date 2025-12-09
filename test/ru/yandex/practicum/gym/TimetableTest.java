@@ -105,7 +105,7 @@ public class TimetableTest {
         timetable.addNewTrainingSession(DayOfWeek.THURSDAY, new TimeOfDay(13, 0), thursdayChildTrainingSession);
         timetable.addNewTrainingSession(DayOfWeek.SATURDAY, new TimeOfDay(10, 0), saturdayChildTrainingSession);
 
-        HashMap<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
+        Map<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
 
         Assertions.assertEquals(4, coachesAndTrainings.get(coach));
 
@@ -135,7 +135,7 @@ public class TimetableTest {
         timetable.addNewTrainingSession(DayOfWeek.THURSDAY, new TimeOfDay(13, 0), thursdayChildTrainingSession);
         timetable.addNewTrainingSession(DayOfWeek.SATURDAY, new TimeOfDay(10, 0), saturdayChildTrainingSession);
 
-        HashMap<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
+        Map<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
 
         Assertions.assertNull(coachesAndTrainings.get(coach2));
     }

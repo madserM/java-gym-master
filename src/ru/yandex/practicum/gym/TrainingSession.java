@@ -38,4 +38,4 @@ public class TrainingSession implements Comparable<TrainingSession> {
     public int compareTo(TrainingSession other) {
         return this.timeOfDay.compareTo(other.timeOfDay);
     }
-}
+    }

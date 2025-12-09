@@ -18,7 +18,7 @@ public class Timetable {
 
     public void addNewTrainingSession(DayOfWeek dayOfWeek, TimeOfDay timeOfDay, TrainingSession trainingSession) {
         if (!timetable.containsKey(dayOfWeek)) {
-            timetable.put(dayOfWeek, new HashMap<>());
+            timetable.put(dayOfWeek, new TreeMap<>());
         }
 
         Map<TimeOfDay, List<TrainingSession>> dayTrainings = timetable.get(dayOfWeek);
@@ -45,22 +45,16 @@ public class Timetable {
 
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         Map<TimeOfDay, List<TrainingSession>> sessions = timetable.get(dayOfWeek);
-        if (sessions == null) {
+        if (sessions == null || sessions.get(timeOfDay) == null) {
             return new ArrayList<>();
         }
 
-        List<TrainingSession> filteredSessions = new ArrayList<>();
-        for (List<TrainingSession> trainingSessions : sessions.values()) {
-            for (TrainingSession session : trainingSessions) {
-                if (session.getTimeOfDay().equals(timeOfDay)) {
-                    filteredSessions.add(session);
-                }
-            }
-        }
+        List<TrainingSession> filteredSessions;
+        filteredSessions = sessions.get(timeOfDay);
         return filteredSessions;
     }
 
-    public HashMap<Coach, Integer> getCountByCoaches() {
+    public Map<Coach, Integer> getCountByCoaches() {
         HashMap<Coach, Integer> coachesAndTrainings = new HashMap<>();
 
         for (Map<TimeOfDay, List<TrainingSession>> dayTrainings : timetable.values()) {
@@ -71,11 +65,15 @@ public class Timetable {
                 }
             }
         }
-        List<Map.Entry<Coach, Integer>> list = new ArrayList<>(coachesAndTrainings.entrySet());
-        list.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-        HashMap<Coach, Integer> sortedCoachesAndTrainings = new LinkedHashMap<>();
-        for (Map.Entry<Coach, Integer> entry : list) {
-            sortedCoachesAndTrainings.put(entry.getKey(), entry.getValue());
+
+        TreeSet<CounterOfTrainings> sortedCoaches = new TreeSet<>();
+        for (Map.Entry<Coach, Integer> entry : coachesAndTrainings.entrySet()) {
+            sortedCoaches.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
+        }
+
+        Map<Coach, Integer> sortedCoachesAndTrainings = new LinkedHashMap<>();
+        for (CounterOfTrainings entry : sortedCoaches) {
+            sortedCoachesAndTrainings.put(entry.getCoach(), entry.getTrainingCount());
         }
         return sortedCoachesAndTrainings;
     }
