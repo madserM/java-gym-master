@@ -45,16 +45,12 @@ public class Timetable {
 
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         Map<TimeOfDay, List<TrainingSession>> sessions = timetable.get(dayOfWeek);
-        if (sessions == null || sessions.get(timeOfDay) == null) {
-            return new ArrayList<>();
-        }
 
-        List<TrainingSession> filteredSessions;
-        filteredSessions = sessions.get(timeOfDay);
+        List<TrainingSession> filteredSessions = sessions.getOrDefault(timeOfDay, new ArrayList<>());
         return filteredSessions;
     }
 
-    public Map<Coach, Integer> getCountByCoaches() {
+    public TreeSet<CounterOfTrainings> getCountByCoaches() {
         HashMap<Coach, Integer> coachesAndTrainings = new HashMap<>();
 
         for (Map<TimeOfDay, List<TrainingSession>> dayTrainings : timetable.values()) {
@@ -68,13 +64,8 @@ public class Timetable {
 
         TreeSet<CounterOfTrainings> sortedCoaches = new TreeSet<>();
         for (Map.Entry<Coach, Integer> entry : coachesAndTrainings.entrySet()) {
-            sortedCoaches.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
+           sortedCoaches.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
         }
-
-        Map<Coach, Integer> sortedCoachesAndTrainings = new LinkedHashMap<>();
-        for (CounterOfTrainings entry : sortedCoaches) {
-            sortedCoachesAndTrainings.put(entry.getCoach(), entry.getTrainingCount());
-        }
-        return sortedCoachesAndTrainings;
+        return sortedCoaches;
     }
 }

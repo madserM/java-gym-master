@@ -2,10 +2,7 @@ package ru.yandex.practicum.gym;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TimetableTest {
 
@@ -105,9 +102,17 @@ public class TimetableTest {
         timetable.addNewTrainingSession(DayOfWeek.THURSDAY, new TimeOfDay(13, 0), thursdayChildTrainingSession);
         timetable.addNewTrainingSession(DayOfWeek.SATURDAY, new TimeOfDay(10, 0), saturdayChildTrainingSession);
 
-        Map<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
+        TreeSet<CounterOfTrainings> coachesAndTrainings = timetable.getCountByCoaches();
 
-        Assertions.assertEquals(4, coachesAndTrainings.get(coach));
+        int trainingCount = 0;
+        for (CounterOfTrainings counter : coachesAndTrainings) {
+            if (counter.getCoach().equals(coach)) {
+                trainingCount = counter.getTrainingCount();
+                break; // Если тренер найден, можно завершить цикл
+            }
+        }
+
+        Assertions.assertEquals(4, trainingCount);
 
     }
 
@@ -135,9 +140,17 @@ public class TimetableTest {
         timetable.addNewTrainingSession(DayOfWeek.THURSDAY, new TimeOfDay(13, 0), thursdayChildTrainingSession);
         timetable.addNewTrainingSession(DayOfWeek.SATURDAY, new TimeOfDay(10, 0), saturdayChildTrainingSession);
 
-        Map<Coach, Integer> coachesAndTrainings = timetable.getCountByCoaches();
+        TreeSet<CounterOfTrainings> coachesAndTrainings = timetable.getCountByCoaches();
 
-        Assertions.assertNull(coachesAndTrainings.get(coach2));
+        int trainingCount = 0;
+        for (CounterOfTrainings counter : coachesAndTrainings) {
+            if (counter.getCoach().equals(coach2)) {
+                trainingCount = counter.getTrainingCount();
+                break;
+            }
+        }
+
+        Assertions.assertEquals(0, trainingCount);
     }
 
     @Test
@@ -172,12 +185,12 @@ public class TimetableTest {
         timetable.addNewTrainingSession(DayOfWeek.MONDAY,  new TimeOfDay(15, 0), mondayChildTrainingSession);
         timetable.addNewTrainingSession(DayOfWeek.THURSDAY,  new TimeOfDay(15, 0), thursdayChildTrainingSession);
 
-        Iterator<Map.Entry<Coach, Integer>> iterator = timetable.getCountByCoaches().entrySet().iterator();
-        Map.Entry<Coach, Integer> firstEntry = iterator.next(); // Получаем первый элемент
-        Map.Entry<Coach, Integer> secondEntry = iterator.next(); // Получаем второй элемент
-        Integer firstCount = firstEntry.getValue();
-        Integer secondCount = secondEntry.getValue();
-        Assertions.assertTrue(firstCount>secondCount);
+        TreeSet<CounterOfTrainings> coachesAndTrainings = timetable.getCountByCoaches();
+        CounterOfTrainings firstEntry = coachesAndTrainings.first();
+        CounterOfTrainings secondEntry = coachesAndTrainings.higher(firstEntry);
+        int firstCount = firstEntry.getTrainingCount();
+        int secondCount = secondEntry.getTrainingCount();
+        Assertions.assertTrue(firstCount > secondCount);
     }
 
     @Test
